@@ -42,3 +42,6 @@ out/
 
 ### Node ###
 node_modules/
+
+### Exclusions ###
+!gradle/wrapper/gradle-wrapper.jar
