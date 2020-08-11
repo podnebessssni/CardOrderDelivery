@@ -8,17 +8,21 @@ import java.util.Locale;
 
 public class DataGenerator {
 
-    final DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    final DateTimeFormatter FORMATEDATE = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private Faker faker = new Faker(new Locale("ru"));
 
     public String dateGenerate(){
         final int random_num = (int) (Math.random() * 15);
         LocalDate date = LocalDate.now();
         LocalDate bookingDate = date.plusDays(3 + random_num);
-        return formatDate.format(bookingDate);
+        return FORMATEDATE.format(bookingDate);
     }
 
     public String nameGenerate(){
+        return faker.name().lastName() + " " + faker.name().firstName() ;
+    }
+    public String wrongNameGenerate(){
+        Faker faker = new Faker(new Locale("en"));
         return faker.name().lastName() + " " + faker.name().firstName() ;
     }
 
@@ -30,6 +34,16 @@ public class DataGenerator {
 
     public String phone(){
         return faker.phoneNumber().phoneNumber();
+    }
+
+    public String wrongCityGenerator(){
+        Faker faker = new Faker(new Locale("en"));
+        return faker.address().city();
+    }
+
+    public String todaysDate(){
+       LocalDate date = LocalDate.now();
+       return FORMATEDATE.format(date);
     }
 
 }

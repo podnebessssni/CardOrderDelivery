@@ -21,18 +21,21 @@ public class CardOrderDeliveryTest {
 
     @Test
     void shouldMakeBookingAndReturnSuccessMessage(){
+        String date = generator.dateGenerate();
         $("[data-test-id='city'] input").setValue(generator.cityGenerate());
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").sendKeys(generator.dateGenerate());
+        $("[data-test-id='date'] input").sendKeys(date);
         $("[data-test-id='name'] input").setValue(generator.nameGenerate());
         $("[data-test-id='phone'] input").setValue(generator.phone());
         $("[data-test-id='agreement'] .checkbox__box").click();
         $(".button").click();
-        $("[data-test-id='success-notification']").shouldHave(text("Успешно"));
+        $("[data-test-id='success-notification']").shouldHave(exactText( "Успешно! Встреча успешно запланирована на "
+        + date));
     }
 
     @Test
     void shouldReturnMessageToChangeBookingIfTheSameData(){
+        String date = generator.dateGenerate();
         $("[data-test-id='city'] input").setValue(generator.cityGenerate());
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[data-test-id='date'] input").sendKeys(generator.dateGenerate());
@@ -42,22 +45,23 @@ public class CardOrderDeliveryTest {
         $(".button").click();
         $(withText("Успешно")).shouldBe(visible);
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").sendKeys(generator.dateGenerate());
+        $("[data-test-id='date'] input").sendKeys(date);
         $(".button").click();
         $("[data-test-id='replan-notification']").shouldHave(text("У вас уже запланирована " +
                 "встреча на другую дату. Перепланировать?"));
         $(".notification_visible .button").click();
-        $(withText("Успешно")).shouldBe(visible);
+        $("[data-test-id='success-notification']").shouldHave(exactText( "Успешно! Встреча успешно запланирована на "
+                + date));
 
     }
 
     @Test
     void shouldReturnAlertMessageIfWrongCity(){
-        $("[data-test-id='city'] input").setValue("Лондон");
+        $("[data-test-id='city'] input").setValue(generator.wrongCityGenerator());
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE, generator.dateGenerate());
         $("[data-test-id='date'] input").sendKeys(generator.dateGenerate());
         $("[data-test-id='name'] input").setValue(generator.nameGenerate());
-        $("[data-test-id='phone'] input").setValue("+79056487564");
+        $("[data-test-id='phone'] input").setValue(generator.phone());
         $("[data-test-id='agreement'] .checkbox__box").click();
         $(".button").click();
         $("[data-test-id='city'] .input__sub").shouldHave(exactText("Доставка в выбранный город недоступна"));
@@ -67,9 +71,9 @@ public class CardOrderDeliveryTest {
     void shouldReturnAlertMessageIfDateIsBeforeThreeDays(){
         $("[data-test-id='city'] input").setValue(generator.cityGenerate());
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").sendKeys("04.08.2020");
+        $("[data-test-id='date'] input").sendKeys(generator.todaysDate());
         $("[data-test-id='name'] input").setValue(generator.nameGenerate());
-        $("[data-test-id='phone'] input").setValue("+79056487564");
+        $("[data-test-id='phone'] input").setValue(generator.phone());
         $("[data-test-id='agreement'] .checkbox__box").click();
         $(".button").click();
         $(" [data-test-id='date'] .input__sub").shouldHave(exactText("Заказ на выбранную дату невозможен"));
@@ -80,7 +84,7 @@ public class CardOrderDeliveryTest {
         $("[data-test-id='city'] input").setValue(generator.cityGenerate());
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[data-test-id='date'] input").sendKeys(generator.dateGenerate());
-        $("[data-test-id='name'] input").setValue("Ivan");
+        $("[data-test-id='name'] input").setValue(generator.wrongNameGenerate());
         $("[data-test-id='phone'] input").setValue(generator.phone());
         $("[data-test-id='agreement'] .checkbox__box").click();
         $(".button").click();
